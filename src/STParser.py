@@ -5,9 +5,11 @@ from src.STLogger import STLogger
 class STParser(Parser):
     tokens = STLexer.tokens
     symbol_table = [[]]
+    snapshot = []
 
-    def __init__ (self, log_path):
+    def __init__ (self, log_path, snapshot_line = 0):
         self.logger = STLogger(log_path)
+        self.snapshot_line = snapshot_line
 
     @_('{ declarations statements functions }')
     def program(self, p):
@@ -41,6 +43,10 @@ class STParser(Parser):
         ids = self.get_args(p[1], p[2])
         for id in ids:
             self.insert( (id, p.lineno) )
+
+    @_('vartype IDENTIFIER ASSIGNMENT_OP CONST_NUMBER')
+    def declaration(self, p):
+        self.insert( (p.IDENTIFIER, p.lineno) )
     
     @_('VOID_KW IDENTIFIER')
     def func_decl(self, p):

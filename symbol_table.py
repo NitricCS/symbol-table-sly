@@ -7,6 +7,4 @@ if __name__ == "__main__":
 
     parser = STParser("./symbol_table.log")
     s = lexer.tokenize(data)
-    # for tok in s:
-    #     print (tok)
     parser.parse(s)
