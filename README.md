@@ -2,6 +2,8 @@
 This project builds a **symbol table** and provides **variable resolutions** for a code written in simplified C.\
 It parses the code using a basic grammar and creates a symbol table using **static scoping**.
 
+You can checkout the repo directly: https://github.com/NitricCS/symbol-table-sly.git
+
 The solution contains of
 * a lexer that tokenizes the example code;
 * a parser with a simplified grammar that detects declarations and some operators in the code;
