@@ -15,7 +15,7 @@ A symbol table is a **list that acts as a stack**. The last element of this list
 A new scope is opened (a new top is added) every time the code enters a function, if statement or a for loop condition.\
 On exit, the scope is closed and the top element is popped from the stack. From then on, that scope is useless and no longer exists in the table.
 
-Whenever a variable is declared, it is saved into the curren scope as a tuple (<variable_name>, <line_number>). This allows to resolve references later through lookup.
+Whenever a variable is declared, it is saved into the current scope as a tuple _(<variable_name>, <line_number>)_. This allows to resolve references later through lookup.
 
 ### Usage
 To execute the solution, run ``python symbol_table.py`` in the root directory.
