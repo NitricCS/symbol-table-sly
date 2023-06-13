@@ -1,3 +1,7 @@
+# Parser for Symbol Table
+#
+# Kirill Borisov, 108144
+
 from sly import Parser
 from src.STLexer import STLexer
 from src.STLogger import STLogger
@@ -5,17 +9,16 @@ from src.STLogger import STLogger
 class STParser(Parser):
     tokens = STLexer.tokens
     symbol_table = [[]]
-    snapshot = []
 
     def __init__ (self, log_path, snapshot_line = 0):
-        self.logger = STLogger(log_path)
-        self.snapshot_line = snapshot_line
+        self.logger = STLogger(log_path)              # a path to save the results to
 
     @_('{ declarations statements functions }')
     def program(self, p):
         self.logger.save_scope(self.symbol_table.pop())
         self.logger.make_log()
 
+    ### Grammar Description Below ###
     @_('{ func_decl open_scope internal_decl body close_scope }')
     def functions(self, p):
         return p.body
@@ -61,8 +64,8 @@ class STParser(Parser):
         self.lookup(p.IDENTIFIER0, p.lineno)
         self.lookup(p.IDENTIFIER1, p.lineno)
     
-    @_('FOR_KW open_scope LP statement SEMICOLON statement SEMICOLON statement close_scope RP body',
-       'FOR_KW open_scope LP declaration SEMICOLON statement SEMICOLON statement close_scope RP body')
+    @_('FOR_KW open_scope LP statement SEMICOLON statement SEMICOLON statement RP body close_scope',
+       'FOR_KW open_scope LP declaration SEMICOLON statement SEMICOLON statement RP body close_scope')
     def statement(self, p):
         pass
 
@@ -112,7 +115,9 @@ class STParser(Parser):
     @_('INT_KW', 'FLOAT_KW')
     def vartype(self, p):
         pass
+    ### Grammar Description End ###
 
+    # Get arguments of binary operators or multiple declarations
     def get_args(self, mandatory, optional: list):
         args = [mandatory]
         for arg in optional:
@@ -120,23 +125,26 @@ class STParser(Parser):
                 for var in arg:
                     args.append(var[1])
         return args
-
-    def insert(self, variable):
-        last = len(self.symbol_table) - 1
+    
+    # Insert symbol into table
+    def insert(self, variable):               # variable[1] is id, variable[2] is lineno
+        last = len(self.symbol_table) - 1     # index of top list in the stack
         if self.is_in_current_scope(variable[0], last):
             self.logger.log_insertion_error(variable[0], variable[1])
         else:
             self.symbol_table[last].append(variable)
 
+    # Check if a symbol is present in the current scope
     def is_in_current_scope(self, variable, last_index):
-        current_scope = self.symbol_table[last_index]
+        current_scope = self.symbol_table[last_index]     # stack top is current scope
         for symbol in current_scope:
             if variable in symbol:
                     return True
-
+    
+    # Lookup method
     def lookup(self, variable, lineno):
-        for scope in reversed(self.symbol_table):
-            for symbol in scope:
+        for scope in reversed(self.symbol_table):         # look through symbol table from top to bottom
+            for symbol in scope:                          # <symbol> is (<variable>, <line_number>)
                 if variable in symbol:
                     self.logger.log_reference(variable, lineno, symbol[1])
                     return True

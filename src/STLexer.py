@@ -1,3 +1,7 @@
+# Lexer (Tokenizer) for Symbol Table
+#
+# Kirill Borisov, 108144
+
 from sly import Lexer
 
 class STLexer(Lexer):

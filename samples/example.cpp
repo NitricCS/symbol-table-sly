@@ -2,9 +2,6 @@ int h, i;
 void B(int w) {
   int j, k;
   i = 2 * w;
-  for (i = 1; i = 10; i = 1 + 1) {
-    j = 2;
-  }
   w = w + 1;
 }
 void A(int x) {
