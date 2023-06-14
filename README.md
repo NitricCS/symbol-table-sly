@@ -4,7 +4,7 @@ It parses the code using a basic grammar and creates a symbol table using **stat
 
 You can checkout the repo directly: https://github.com/NitricCS/symbol-table-sly.git
 
-The solution contains of
+The solution contains
 * a lexer that tokenizes the example code;
 * a parser with a simplified grammar that detects declarations and some operators in the code;
 * a logger that saves all checkpoints to a file.
